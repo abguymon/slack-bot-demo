@@ -1,0 +1,16 @@
+{
+  "issue": {
+    "key": "DEMO-123",
+    "fields": {
+      "status": {
+        "name": "Staged"
+      },
+      "repoUrl": "https://github.com/your-username/your-repo-name",
+      "imageTag": "v1.0.0",
+      "workflowBranch": "main",
+      "assignee": {
+        "emailAddress": "your-email@example.com"
+      }
+    }
+  }
+} 
