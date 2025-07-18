@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # Example service that would be deployed with different image tags
+  demo-service:
+    image: your-registry/demo-service:${IMAGE_TAG:-latest}
+    container_name: demo-service
+    ports:
+      - "8080:80"
+    environment:
+      - SERVICE_NAME=demo-service
+      - VERSION=${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    labels:
+      - "com.example.service=demo-service"
+      - "com.example.version=${IMAGE_TAG:-latest}"
+
+  # Example of how the prod K8s repo would be structured
+  # This represents the repository that gets PRs created in it
+  prod-k8s-repo:
+    image: alpine:latest
+    container_name: prod-k8s-repo
+    volumes:
+      - ./k8s-manifests:/k8s-manifests
+    working_dir: /k8s-manifests
+    command: >
+      sh -c "
+        echo '📁 Prod K8s Repository Structure:' &&
+        echo '├── deployments/' &&
+        echo '│   ├── demo-service.yaml' &&
+        echo '│   └── other-services.yaml' &&
+        echo '├── services/' &&
+        echo '│   └── demo-service-svc.yaml' &&
+        echo '└── configmaps/' &&
+        echo '    └── demo-service-config.yaml' &&
+        echo '' &&
+        echo '💡 When a PR is created, it would update the image tag in:' &&
+        echo '   deployments/demo-service.yaml' &&
+        tail -f /dev/null
+      "
+
+# Example of how to run with different image tags:
+# docker-compose up -e IMAGE_TAG=v1.2.3
+# docker-compose up -e IMAGE_TAG=v2.0.0 
